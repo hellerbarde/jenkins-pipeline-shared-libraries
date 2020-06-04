@@ -12,7 +12,7 @@ class OcClient {
         this.ctx = ctx
     }
 
-    void login(String credentialId, String cluster, String project) {
+    void login(String cluster, String credentialId) {
         def saToken = ctx.lookupTokenFromCredentials(credentialId)
         if (!saToken) {
             ctx.fail("Token for credentialId '${credentialId}' cannot be found in Jenkins")
@@ -20,11 +20,17 @@ class OcClient {
         ctx.echo("Logging into to OpenShift cluster")
         def exitCode = invokeOcCommand("oc login ${cluster} --insecure-skip-tls-verify=true --token=${saToken}", false, true) as int
         if (exitCode != 0) {
-            ctx.fail("Logging into OpenShift cluster ${cluster} failed")
+            ctx.fail("Failed to log into OpenShift cluster ${cluster}")
         }
+    }
 
-        ctx.echo(invokeOcCommand("oc project ${project}", true) as String)
-        ctx.echo("openshift project: ${project}")
+    void project(String project) {
+        def exitCode = invokeOcCommand("oc project ${project}", false, true) as int
+        if (exitCode != 0) {
+            ctx.fail("Failed to use OpenShift project ${project}")
+        } else {
+            ctx.echo("Using OpenShift project ${project}")
+        }
     }
 
     private Object invokeOcCommand(String command, boolean returnStdout = false, boolean returnStatus = false) {

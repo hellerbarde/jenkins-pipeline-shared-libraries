@@ -21,8 +21,8 @@ class OpenshiftApplyCommand {
         def app = ctx.stepParams.getOptional("app", null) as String
         def credentialId = ctx.stepParams.getOptional("credentialId", "${project}${DEFAULT_CREDENTIAL_ID_SUFFIX}") as String
 
-        ctx.oc.login(credentialId, cluster, project)
-
+        ctx.oc.login(cluster, credentialId)
+        ctx.oc.project(project)
     }
 
 }
