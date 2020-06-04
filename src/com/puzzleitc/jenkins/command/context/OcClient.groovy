@@ -4,11 +4,11 @@ class OcClient {
 
     private static final DEFAULT_OC_TOOL_NAME = "oc_3_11"
 
-    private final String ocHome
     private final PipelineContext ctx
 
+    private String ocHome
+
     OcClient(PipelineContext ctx) {
-        this.ocHome = ctx.tool(DEFAULT_OC_TOOL_NAME)
         this.ctx = ctx
     }
 
@@ -28,9 +28,15 @@ class OcClient {
     }
 
     private Object invokeOcCommand(String command, boolean returnStdout = false, boolean returnStatus = false) {
+        initOcHomeIfNecessary()
         ctx.withEnv(["PATH+OC_HOME=${ocHome}/bin"]) {
             ctx.sh(script: command, returnStdout: returnStdout, returnStatus: returnStatus)
         }
     }
 
+    void initOcHomeIfNecessary() {
+        if (!ocHome) {
+            ocHome = ctx.tool(DEFAULT_OC_TOOL_NAME)
+        }
+    }
 }

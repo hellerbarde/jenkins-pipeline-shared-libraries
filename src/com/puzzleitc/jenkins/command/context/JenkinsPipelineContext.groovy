@@ -3,15 +3,22 @@ package com.puzzleitc.jenkins.command.context
 class JenkinsPipelineContext implements PipelineContext {
 
     private final JenkinsInvoker invoker = new JenkinsInvoker()
+    private final OcClient ocClient
     private final StepParams stepParams
 
     JenkinsPipelineContext(Map params = [:]) {
+        this.ocClient = new OcClient(this);
         this.stepParams = new StepParams(params, this)
     }
 
     @Override
     StepParams getStepParams() {
         return stepParams
+    }
+
+    @Override
+    OcClient getOc() {
+        return ocClient
     }
 
     @Override
