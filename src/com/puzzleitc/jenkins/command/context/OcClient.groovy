@@ -28,8 +28,6 @@ class OcClient {
         def exitCode = invokeOcCommand("oc project ${project}", false, true) as int
         if (exitCode != 0) {
             ctx.fail("Failed to use OpenShift project ${project}")
-        } else {
-            ctx.echo("Using OpenShift project ${project}")
         }
     }
 
