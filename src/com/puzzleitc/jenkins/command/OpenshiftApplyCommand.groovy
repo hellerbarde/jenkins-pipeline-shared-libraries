@@ -38,7 +38,7 @@ class OpenshiftApplyCommand {
             ctx.fail("Token for credentialId '${credentialId}' cannot be found in Jenkins")
         }
 
-        def exitCode = invokeOcCommand("oc login ${cluster} --insecure-skip-tls-verify=true --token=${saToken}", false, true) as int
+        def exitCode = invokeOcCommand("oc login ${cluster} --insecure-skip-tls-verify=true --token=gschnabber", false, true) as int
         if (exitCode != 0) {
             ctx.fail("Login to OpenShift cluster ${cluster} failed: exitCode=${}")
         } else {
@@ -51,11 +51,6 @@ class OpenshiftApplyCommand {
             ctx.echo(invokeOcCommand("oc project ${project}", true) as String)
             ctx.echo("openshift project: ${project}")
         }
-    }
-
-    String whoami() {
-        def out = invokeOcCommand("oc whoami", true) as String
-        out.trim()
     }
 
     Object invokeOcCommand(String command, boolean returnStdout = false, boolean returnStatus = false) {
