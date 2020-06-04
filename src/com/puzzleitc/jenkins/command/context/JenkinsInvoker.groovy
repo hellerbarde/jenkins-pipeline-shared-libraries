@@ -18,11 +18,11 @@ Object getCurrentBuildVar() {
 }
 
 Object callSh(Map args) {
-    ansiColor('xterm') {
-        timestamps {
-            sh(args)
-        }
+    if (args["script"] && !args["script"].toString().startsWith("#!")) {
+        // suppress stdout of shell command by passing custom shebang line
+        args["script"] = "#!/bin/sh -e\n" + args["script"]
     }
+    sh(args)
 }
 
 Object callWithEnv(List<String> env, Closure<Object> closure) {
@@ -42,15 +42,11 @@ String callTool(String toolName) {
 }
 
 def callEcho(String message) {
-    echo message
+    echo(message)
 }
 
 def callError(String message) {
     error(message)
-}
-
-def callExit(int status) {
-    exit(status)
 }
 
 String lookupValueFromVault(String path, String key) {
