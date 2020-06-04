@@ -18,7 +18,11 @@ Object getCurrentBuildVar() {
 }
 
 Object callSh(Map args) {
-    sh(args)
+    ansiColor('xterm') {
+        timestamps {
+            sh(args)
+        }
+    }
 }
 
 Object callWithEnv(List<String> env, Closure<Object> closure) {
